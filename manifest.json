@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Typography Analysis",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Advise on typography",
   "icons": {
     "48": "icons/48.png"

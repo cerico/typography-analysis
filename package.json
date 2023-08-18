@@ -1,6 +1,6 @@
 {
   "name": "typography-analysis",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Browser extension to analyze page for typography suggestions",
   "main": "init.js",
   "scripts": {
