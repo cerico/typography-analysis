@@ -1,0 +1,61 @@
+name: Test
+on:
+  push:
+    branches-ignore:
+      - main
+
+env:
+  APP_NAME: typography
+
+jobs:
+  macbook:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Runs the tldr target
+        run: make tldr
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: make a gitconfig
+        run: |
+          echo -e "[user]
+          name = github-runner
+          email = githubrunner@google.fi
+          " > ~/.gitconfig
+
+      - name: Installs the site
+        run: npm_config_yes=true npx venlo@latest --default ${{ env.APP_NAME }} readme
+
+      - name: Copies top readme to index
+        run: cp README.md ${{ env.APP_NAME }}/src/content/top/index.md
+
+      - name: Copies changelog to index
+        run: cp CHANGELOG.md ${{ env.APP_NAME }}/src/content/top/changelog.md
+
+      - name: Copies images to docsite
+        run: cp images/*.png ${{ env.APP_NAME }}/public/images
+
+      - name: Build docs site
+        run: cd ${{ env.APP_NAME }} && make build

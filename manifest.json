@@ -1,0 +1,32 @@
+{
+  "manifest_version": 2,
+  "name": "Typography Analysis",
+  "version": "0.0.0",
+  "description": "Advise on typography",
+  "icons": {
+    "48": "icons/48.png"
+  },
+  "homepage_url": "https://dev.io37.ch",
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "init.js"
+      ],
+      "css": [
+        "styles.css"
+      ]
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "typography@io37.ch"
+    }
+  },
+  "browser_action": {
+    "default_icon": "icons/48.png",
+    "default_title": "Typography Analysis"
+  }
+}
