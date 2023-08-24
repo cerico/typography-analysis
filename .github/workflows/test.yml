@@ -6,9 +6,10 @@ on:
 
 env:
   APP_NAME: typography
+  STAGING_URL: asda.io37.ch
 
 jobs:
-  macbook:
+  test:
     runs-on: macos-latest
 
     steps:
@@ -46,7 +47,7 @@ jobs:
           " > ~/.gitconfig
 
       - name: Installs the site
-        run: npm_config_yes=true npx venlo@latest --default ${{ env.APP_NAME }} readme
+        run: npm_config_yes=true npx venlo@latest --appName venlo --language astro --design readme --colorScheme detective
 
       - name: Copies top readme to index
         run: cp README.md ${{ env.APP_NAME }}/src/content/top/index.md
@@ -59,3 +60,21 @@ jobs:
 
       - name: Build docs site
         run: cd ${{ env.APP_NAME }} && make build
+
+      - name: Create branch.html
+        run: |
+          cp .github/templates/branch.html ${{ env.APP_NAME }}/dist/branch.html
+          cp .github/templates/workflow.css ${{ env.APP_NAME }}/dist/workflow.css
+          sed -i 's|\[REPO_NAME\]|'"$GITHUB_REPOSITORY"'|g' ${{ env.APP_NAME }}/dist/branch.html
+          sed -i 's|\[BRANCH_NAME\]|'"$(echo $GITHUB_REF | sed 's|refs/heads/||')"'|g' ${{ env.APP_NAME }}/dist/branch.html
+          sed -i 's|\[DATE\]|'"$(date)"'|g' ${{ env.APP_NAME }}/dist/branch.html
+
+      - name: Rsync
+        uses: burnett01/rsync-deployments@4.1
+        with:
+          switches: -a
+          path: ${{ env.APP_NAME }}/dist/
+          remote_path: "/var/www/html/${{ env.STAGING_URL }}"
+          remote_host: ${{ env.STAGING_URL }}
+          remote_user: deploy
+          remote_key: ${{ secrets.DEPLOY_KEY }}
