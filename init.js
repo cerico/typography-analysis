@@ -4,8 +4,9 @@ let longestLine = {
 };
 const longLines = []
 const flaggedElements = new Set();
-const INCLUDED_TAGS = ['p', 'span', 'div', 'article', 'section', 'main', 'aside', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'blockquote'];
+const INCLUDED_TAGS = ['p']
 const preferredMaxWidth = 75
+const itsABlockOfText = 100
 
 const tempElement = document.createElement('span');
 tempElement.style.visibility = 'hidden';
@@ -40,6 +41,9 @@ const measureLineWidths = (element) => {
     return; // Skip this element since it's already flagged
   }
   const words = element.textContent.trim().split(/\s+/);
+  if (words.length < itsABlockOfText) {
+    return
+  }
   let currentLine = '';
   let currentLineWidth = 0;
 

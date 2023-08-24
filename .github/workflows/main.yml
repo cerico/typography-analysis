@@ -58,7 +58,7 @@ jobs:
           " > ~/.gitconfig
 
       - name: Installs the site
-        run: npm_config_yes=true npx venlo@latest --default ${{ env.APP_NAME }} readme
+        run: npm_config_yes=true npx venlo@latest --appName ${{ env.APP_NAME }} --language astro --design readme --colorScheme detective
 
       - name: Copies top readme to index
         run: cp README.md ${{ env.APP_NAME }}/src/content/top/index.md
